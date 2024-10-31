@@ -2,33 +2,20 @@ package aEnterpise.to_do_list.service
 
 
 import aEnterpise.to_do_list.dto.UserDto
-import aEnterpise.to_do_list.model.User
-import aEnterpise.to_do_list.repository.ToDoRepository
+import aEnterpise.to_do_list.model.UserEntity
+import aEnterpise.to_do_list.repository.TaskRepository
 import aEnterpise.to_do_list.repository.UserRepository
 import jakarta.transaction.Transactional
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class UserServiceImpl(
-    private val userRepository: UserRepository,
-    private val toDoRepository: ToDoRepository
-) : UserService {
-    @Transactional
-    override fun registerUser(userDto: UserDto): User {
-        val user = User(
-        userID = 0,
-        username = userDto.username,
-        email = userDto.email,
-        password = userDto.password)
-        return userRepository.save(user)
+class UserServiceImpl(@Autowired private val userRepository: UserRepository): UserService {
+    override fun findUserByEmail(email: String): UserEntity {
+        return userRepository.findUserByEmail(email).orElse(null)
     }
 
-    override fun findByUsername(username: String): User? {
-        return userRepository.findByUsername(username)
+    override fun existsByEmail(email: String): Boolean {
+        return userRepository.existsByEmail(email)
     }
-
-    override fun findByEmail(email: String): User? {
-        return userRepository.findByEmail(email)
-    }
-
 }

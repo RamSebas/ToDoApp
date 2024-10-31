@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: root
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update  # Cambia a 'create' o 'none' según tus necesidades
+    show-sql: true  # Opcional, para mostrar las consultas SQL en la consola
+  sql:
+    init:
+      mode: always  # Cargar datos iniciales desde data.sql si lo tienes
+security:
+  jwt:
+    key:
+      private: 4ebb181f77c0d38a19da08485188cb2f847f23f449ba24447437ff8b18d11f82
+    user:
+      generator: AUTH0JWT-BACKEND

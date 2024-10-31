@@ -2,28 +2,23 @@ package aEnterpise.to_do_list.controllers
 
 
 import aEnterpise.to_do_list.dto.UserDto
-import aEnterpise.to_do_list.model.User
+import aEnterpise.to_do_list.model.UserEntity
 import aEnterpise.to_do_list.service.UserService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/auth")
-class UserController(private val userService: UserService) {
+@RequestMapping("/user")
+class UserController(@Autowired private val userService: UserService) {
 
-    @PostMapping("/register")
-    fun registerUser(@RequestBody userDto: UserDto): ResponseEntity<User> {
-        val user = userService.registerUser(userDto)
-        return ResponseEntity.ok(user)
-    }
+    @GetMapping
+    fun getUser(): ResponseEntity<UserEntity> {
+        val auth = SecurityContextHolder.getContext().authentication
+        val email = auth.name
 
-    @GetMapping("/user/{username}")
-    fun getUserByUsername(@PathVariable username: String): ResponseEntity<User> {
-        val user = userService.findByUsername(username)
-        return if (user != null) {
-            ResponseEntity.ok(user)
-        } else {
-            ResponseEntity.notFound().build()
-        }
+        return ResponseEntity.ok(userService.findUserByEmail(email))
     }
 }
